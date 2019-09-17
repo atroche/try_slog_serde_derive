@@ -1,0 +1,15 @@
+[package]
+name = "try_slog_serde_derive"
+version = "0.1.0"
+authors = ["Alistair Roche <roche.a@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+slog = {version = "2.5.2", features = ["nested-values"]}
+slog_derive = "0.1.1"
+serde = {version = "1.0.101", features = ["derive"]}
+erased-serde = "0.3.9"
+slog-term = "2.4"
+slog-json = "2.3.0"
