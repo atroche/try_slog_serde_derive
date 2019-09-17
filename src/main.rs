@@ -15,22 +15,20 @@ use slog_term::{CompactFormat, TermDecorator};
 use std::sync::Mutex;
 
 #[derive(Clone, SerdeValue, Serialize)]
-struct Headers(HashMap<String, String>);
+struct MyString(String);
+
+fn main() {
+    let drain = Mutex::new(slog_json::Json::default(std::io::stdout())).map(slog::Fuse);
+    let logger = slog::Logger::root(drain, o!());
+    let my_string = MyString("testing".into());
+    debug!(logger, "Hello, world!"; "my_string" => my_string);
+}
+
 
 type CompactDrain = Fuse<Mutex<CompactFormat<TermDecorator>>>;
-
 // currently unused, but fails in the same way slog_json does
 pub fn default_compact_drain() -> CompactDrain {
     let decorator = slog_term::TermDecorator::new().build();
     let format = slog_term::CompactFormat::new(decorator).build();
     std::sync::Mutex::new(format).fuse()
-}
-
-fn main() {
-    let drain = Mutex::new(slog_json::Json::default(std::io::stdout())).map(slog::Fuse);
-    let logger = slog::Logger::root(drain, o!());
-    let mut header_map = HashMap::new();
-    header_map.insert("User-Agent".into(), "curl/7.65.3".into());
-    let headers = Headers(header_map);
-    debug!(logger, "Hello, world!"; "headers" => headers);
 }
